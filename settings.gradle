@@ -1,2 +1,10 @@
 rootProject.name = 't-links'
+include 'remote-module'
+include 'network-module'
+
+include 'network-module:network-mqtt-module'
+findProject(':network-module:network-mqtt-module')?.name = 'network-mqtt-module'
+
+include 'network-module:network-core-module'
+findProject(':network-module:network-core-module')?.name = 'network-core-module'
 
