@@ -4,6 +4,7 @@ import lombok.Data;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Sinks;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,9 +25,8 @@ public class Test {
 
 
 
-    public static void main(String[] args) throws InterruptedException {
 
-
+    public static void processorDemo() throws InterruptedException {
         executorService.execute(() -> {
             connectionProcessor
                     .map(Function.identity())
@@ -44,6 +44,13 @@ public class Test {
             sink.next(new Demo(i));
             Thread.sleep(3000L);
         }
+    }
+
+
+    public static void main(String[] args) throws InterruptedException {
+        processorDemo();
+
+
     }
 
     @Data

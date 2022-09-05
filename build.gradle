@@ -4,6 +4,7 @@
 allprojects {
     group = 'com.tlinks'
     version = '1.0.0-SNAPSHOT'
+    apply plugin: 'idea'
 }
 
 subprojects {
@@ -15,16 +16,23 @@ subprojects {
         mavenCentral()
     }
 
+    ext {//依赖版本
+        reactorCoreVersion = "3.4.21"
+        lombokVersion = "1.18.0"
+        slf4jApiVersion = "1.7.25"
+        logbackVersion = "1.2.3"
+    }
+
     dependencies {
 
-        api 'io.projectreactor:reactor-core:3.4.21'
+        api("io.projectreactor:reactor-core:${reactorCoreVersion}")
 
-        api 'org.projectlombok:lombok:1.18.0'
+        api("org.projectlombok:lombok:${lombokVersion}")
 
-        api 'org.slf4j:slf4j-api:1.7.25'
+        api("org.slf4j:slf4j-api:${slf4jApiVersion}")
 
-        api 'ch.qos.logback:logback-classic:1.2.3'
-        api 'ch.qos.logback:logback-core:1.2.3'
+        api("ch.qos.logback:logback-classic:${logbackVersion}")
+        api("ch.qos.logback:logback-core:${logbackVersion}")
 
 //    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
