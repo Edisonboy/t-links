@@ -7,7 +7,17 @@ package org.tlinks.network;
  */
 public interface Network {
 
+    /**
+     * ID唯一标识
+     *
+     * @return ID
+     */
     String getId();
+
+    /**
+     * 关闭网络组件
+     */
+    void shutdown();
 
 
 }

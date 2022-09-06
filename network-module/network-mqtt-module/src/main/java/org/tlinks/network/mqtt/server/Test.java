@@ -23,10 +23,41 @@ public class Test {
 
     private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
+    public static void sinkDemo() throws InterruptedException {
+        Sinks.Many<Demo> all = Sinks.many().replay().all();
 
+        executorService.execute(() -> {
+            all.asFlux()
+                    .doOnNext(demo -> {
+                        System.out.println("subscribe-A:" + demo.getId());
+                    })
+                    .subscribe();
+        });
 
+        executorService.execute(() -> {
+            all.asFlux()
+                    .doOnNext(demo -> {
+                        System.out.println("subscribe-B:" + demo.getId());
+                    })
+                    .subscribe();
+        });
+
+        Thread.sleep(5000L);
+
+        System.out.println("subscribe count:" + all.currentSubscriberCount());
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println("==> publish:" + i);
+            all.tryEmitNext(new Demo(i));
+            Thread.sleep(3000L);
+        }
+
+    }
 
     public static void processorDemo() throws InterruptedException {
+
+        System.out.println(connectionProcessor.hasDownstreams());
+
         executorService.execute(() -> {
             connectionProcessor
                     .map(Function.identity())
@@ -39,6 +70,8 @@ public class Test {
 
         Thread.sleep(5000L);
 
+        System.out.println(connectionProcessor.hasDownstreams());
+
         for (int i = 0; i < 5; i++) {
             System.out.println("==> publish:" + i);
             sink.next(new Demo(i));
@@ -48,8 +81,9 @@ public class Test {
 
 
     public static void main(String[] args) throws InterruptedException {
-        processorDemo();
+        //processorDemo();
 
+        sinkDemo();
 
     }
 
