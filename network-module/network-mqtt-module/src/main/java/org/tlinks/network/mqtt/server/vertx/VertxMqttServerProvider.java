@@ -19,7 +19,7 @@ import java.util.List;
  * @description:
  */
 @Slf4j
-public class VertxMqttServerProvider implements NetworkProvider<VertxMqttServerProperties> {
+public class VertxMqttServerProvider implements NetworkProvider<VertxMqttServerProperties, VertxMqttServer> {
 
     private final Vertx vertx;
 
@@ -33,7 +33,7 @@ public class VertxMqttServerProvider implements NetworkProvider<VertxMqttServerP
     }
 
     @Override
-    public Network createNetwork(VertxMqttServerProperties properties) {
+    public VertxMqttServer createNetwork(VertxMqttServerProperties properties) {
         VertxMqttServer server = new VertxMqttServer(properties.getId());
         initServer(server, properties);
         return server;
@@ -60,7 +60,7 @@ public class VertxMqttServerProvider implements NetworkProvider<VertxMqttServerP
 
 
     @Override
-    public void reload(Network network, VertxMqttServerProperties properties) {
+    public void reload(VertxMqttServer network, VertxMqttServerProperties properties) {
 
     }
 

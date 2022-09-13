@@ -1,6 +1,7 @@
 package org.tlinks.network.mqtt.server;
 
 import org.tlinks.network.Network;
+import org.tlinks.network.mqtt.MqttConnection;
 import reactor.core.publisher.Flux;
 
 /**

@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  *
  * @param <P> 网络组件类型
  */
-public interface NetworkProvider<P> {
+public interface NetworkProvider<P,S extends Network> {
 
     /**
      * 类型
@@ -29,7 +29,7 @@ public interface NetworkProvider<P> {
      * @return 网络组件
      */
     @Nonnull
-    Network createNetwork(@Nonnull P properties);
+    S createNetwork(@Nonnull P properties);
 
     /**
      * 重新加载网络组件
@@ -37,7 +37,7 @@ public interface NetworkProvider<P> {
      * @param network    网络组件
      * @param properties 配置信息
      */
-    void reload(@Nonnull Network network, @Nonnull P properties);
+    void reload(@Nonnull S network, @Nonnull P properties);
 
 
     /**

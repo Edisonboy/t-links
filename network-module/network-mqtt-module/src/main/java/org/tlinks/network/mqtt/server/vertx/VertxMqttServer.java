@@ -2,9 +2,8 @@ package org.tlinks.network.mqtt.server.vertx;
 
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import lombok.extern.slf4j.Slf4j;
-import org.tlinks.network.mqtt.server.MqttConnection;
+import org.tlinks.network.mqtt.MqttConnection;
 import org.tlinks.network.mqtt.server.MqttServer;
-import org.tlinks.network.mqtt.server.vertx.VertxMqttConnection;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
@@ -20,11 +19,7 @@ public class VertxMqttServer implements MqttServer {
 
     private Collection<io.vertx.mqtt.MqttServer> mqttServer;
 
-    private static Sinks.Many<MqttConnection> sink;
-
-    public static void init() {
-        sink = Sinks.many().replay().all();
-    }
+    private final Sinks.Many<MqttConnection> dispatcher = Sinks.many().replay().all();
 
     private final String id;
 
@@ -43,14 +38,14 @@ public class VertxMqttServer implements MqttServer {
                     log.error(error.getMessage(), error);
                 })
                 .endpointHandler(endpoint -> {
-                    if (sink.currentSubscriberCount() == 0) {
+                    if (dispatcher.currentSubscriberCount() == 0) {
                         log.info("mqtt server no handler for:[{}]", endpoint.clientIdentifier());
                         endpoint.reject(MqttConnectReturnCode.CONNECTION_REFUSED_SERVER_UNAVAILABLE);
-
+                        return;
                     }
                     // TODO 超时控制
 
-                    sink.tryEmitNext(new VertxMqttConnection(endpoint));
+                    dispatcher.tryEmitNext(new VertxMqttConnection(endpoint));
                 });
         }
     }
@@ -79,6 +74,6 @@ public class VertxMqttServer implements MqttServer {
 
     @Override
     public Flux<MqttConnection> acquireConnection() {
-        return sink.asFlux();
+        return dispatcher.asFlux();
     }
 }
