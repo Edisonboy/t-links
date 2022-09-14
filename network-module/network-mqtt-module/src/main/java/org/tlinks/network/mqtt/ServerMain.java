@@ -27,8 +27,8 @@ public class ServerMain {
         network
                 .acquireConnection()
                 .doOnNext(mqttConnection -> {
-                    System.out.println("test");
-
+                    // TODO 为什么每有一个新的客户端进来，就会执行这里
+                    System.out.println(mqttConnection.getClientId());
                     // 开启服务
                     mqttConnection.accept();
 

@@ -56,6 +56,14 @@ public interface MqttConnection {
      */
     void onClose(Consumer<MqttConnection> listener);
 
+    /**
+     * 推送消息到客户端
+     *
+     * @param message MQTT消息
+     * @return 异步推送结果
+     */
+    Mono<Void> publish(MqttMessage message);
+
 
     /**
      * 订阅客户端推送的消息

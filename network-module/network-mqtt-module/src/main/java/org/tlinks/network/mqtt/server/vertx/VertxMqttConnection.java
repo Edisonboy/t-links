@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttQoS;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.mqtt.MqttEndpoint;
 import io.vertx.mqtt.MqttTopicSubscription;
 import io.vertx.mqtt.messages.MqttPublishMessage;
@@ -72,6 +73,28 @@ public class VertxMqttConnection implements MqttConnection {
     @Override
     public void onClose(Consumer<MqttConnection> listener) {
         disconnectConsumer = disconnectConsumer.andThen(listener);
+    }
+
+    @Override
+    public Mono<Void> publish(MqttMessage message) {
+        ping();
+        return Mono.create(sink -> {
+            Buffer buffer = Buffer.buffer(message.getPayload());
+            endpoint.publish(
+                    message.getTopic(),
+                    buffer,
+                    MqttQoS.valueOf(message.getQosLevel()),
+                    message.isDup(),
+                    message.isRetain(),
+                    result -> {
+                        if (result.succeeded()) {
+                            sink.success();
+                        } else {
+                            sink.error(result.cause());
+                        }
+                    }
+            );
+        });
     }
 
     @Override
