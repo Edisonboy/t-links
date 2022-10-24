@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import io.vertx.core.Vertx;
 import io.vertx.mqtt.MqttServer;
 import lombok.extern.slf4j.Slf4j;
-import org.tlinks.network.Network;
 import org.tlinks.network.NetworkProperties;
 import org.tlinks.network.NetworkProvider;
 import org.tlinks.network.NetworkType;

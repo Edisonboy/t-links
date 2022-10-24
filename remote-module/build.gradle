@@ -11,6 +11,8 @@ dependencies {
     api 'ch.qos.logback:logback-classic:1.2.3'
     api 'ch.qos.logback:logback-core:1.2.3'
 
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
