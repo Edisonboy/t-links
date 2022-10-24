@@ -13,7 +13,7 @@ import io.vertx.mqtt.messages.MqttUnsubscribeMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.tlinks.network.mqtt.MqttMessage;
+import org.tlinks.network.message.MqttMessage;
 import org.tlinks.network.mqtt.MqttSubscription;
 import org.tlinks.network.mqtt.MqttUnSubscription;
 import org.tlinks.network.mqtt.MqttConnection;
@@ -88,8 +88,10 @@ public class VertxMqttConnection implements MqttConnection {
                     message.isRetain(),
                     result -> {
                         if (result.succeeded()) {
+                            System.out.println("msg publish success");
                             sink.success();
                         } else {
+                            System.out.println("msg publish fail");
                             sink.error(result.cause());
                         }
                     }
@@ -342,12 +344,12 @@ public class VertxMqttConnection implements MqttConnection {
         }
 
         @Override
-        public String clientId() {
+        public String getClientId() {
             return VertxMqttConnection.this.getClientId();
         }
 
         @Override
-        public int messageId() {
+        public int getMessageId() {
             return message.messageId();
         }
 

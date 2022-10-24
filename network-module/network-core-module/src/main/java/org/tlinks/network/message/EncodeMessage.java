@@ -1,8 +1,7 @@
-package org.tlinks.network.mqtt;
+package org.tlinks.network.message;
 
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -17,7 +16,6 @@ public interface EncodeMessage {
      *
      * @return ByteBuf
      */
-    @Nonnull
     ByteBuf getPayload();
 
 

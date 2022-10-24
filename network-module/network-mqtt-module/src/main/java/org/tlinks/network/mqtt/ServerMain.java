@@ -1,11 +1,15 @@
 package org.tlinks.network.mqtt;
 
+import io.netty.buffer.Unpooled;
 import io.vertx.core.Vertx;
 import io.vertx.mqtt.MqttServerOptions;
 import io.vertx.mqtt.MqttTopicSubscription;
+import org.tlinks.network.message.MqttMessage;
+import org.tlinks.network.message.SimpleMqttMessage;
 import org.tlinks.network.mqtt.server.vertx.VertxMqttServer;
 import org.tlinks.network.mqtt.server.vertx.VertxMqttServerProperties;
 import org.tlinks.network.mqtt.server.vertx.VertxMqttServerProvider;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * @author : zzh
@@ -33,9 +37,12 @@ public class ServerMain {
                     mqttConnection.accept();
 
                     mqttConnection.handleMessage()
+                            .publishOn(Schedulers.boundedElastic())
                             .doOnNext(msg -> {
                                 System.out.println("===handle message===");
                                 System.out.println(msg.payloadAsString());
+
+                                msgHandler(mqttConnection, msg);
                                 System.out.println("==========================");
                             })
                             .subscribe();
@@ -62,7 +69,17 @@ public class ServerMain {
                 })
                 //.flatMap(mqttConnection -> mqttConnection)
                 .subscribe();
+    }
 
+    public static void msgHandler(MqttConnection connection, MqttMessage message) {
+        System.out.println("send msg");
+        connection.publish(SimpleMqttMessage.builder()
+                        .qosLevel(2)
+                        .topic("/test")
+                        .payload(Unpooled.wrappedBuffer("testhahah".getBytes()))
+                        .build())
+                //.doOnSubscribe()
+                .subscribe();
     }
     
 }
